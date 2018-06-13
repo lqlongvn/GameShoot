@@ -8,23 +8,19 @@ import java.util.Random;
 
 public class StarSpawner extends GameObject {
 
-    private Random random;
-    private FrameCounter frameCounter;
-
+    FrameCounter frameCounter = new FrameCounter(20);
+    Random random;
     public StarSpawner() {
         this.random = new Random();
-        this.frameCounter = new FrameCounter(30);
     }
-
     @Override
-    public void run() {
-        super.run();
-        if (this.frameCounter.run()) {
-            Star star = new Star();
-            star.position.set(1024, this.random.nextInt(600));
-            star.velocity.set(-(this.random.nextInt(3) + 1), 0);
-            GameObjectManager.instance.add(star);
+    public void run(){
+        if(this.frameCounter.run()){
+            Star star = GameObjectManager.instance.recycle(Star.class);
+            star.position.set(1024, random.nextInt(600));
+            star.velocity.set(-(random.nextInt(2)+1),0);
             this.frameCounter.reset();
         }
+
     }
 }
