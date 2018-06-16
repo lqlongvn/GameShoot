@@ -1,25 +1,23 @@
 package game.star;
 
 import base.GameObject;
-import base.GameObjectManager;
 import base.Vector2D;
 import renderer.ImageRenderer;
 
-public class Star extends GameObject {
+import java.awt.*;
 
+public class Star extends GameObject {
     public Vector2D velocity;
 
     public Star() {
-
         this.velocity = new Vector2D();
-        this.renderer = new ImageRenderer("resources/images/star.png",5,5);
+        this.renderer = new ImageRenderer("resources/images/star.png", 5, 5, Color.white);
     }
 
     @Override
-    public void run(){
+    public void run() {
         super.run();
         this.position.addUp(this.velocity);
-        GameObjectManager.instance.killObject(this);
     }
 
 }

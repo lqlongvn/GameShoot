@@ -1,32 +1,36 @@
 package game.player;
 
+import base.FrameCounter;
 import base.GameObject;
+import base.GameObjectManager;
 import base.Vector2D;
-import game.bullet.BulletEnemy;
-import game.BuffObjects.Shield;
-import game.BuffObjects.TripleShoot;
+import game.EffectObject.Shield;
+import game.EffectObject.Smoke;
+import game.EffectObject.TripleShot;
+import game.bullet.Bullet;
 import game.enemy.Enemy;
-import game.enemy.SpecialEnemy;
 import physic.BoxCollider;
 import physic.PhysicBody;
 import physic.RunHitObject;
+import renderer.ImageRenderer;
 import renderer.PolygonRenderer;
+
 import java.awt.*;
 
 public class Player extends GameObject implements PhysicBody {
-    public BoxCollider boxCollider;
-
     public PlayerMove playerMove;
-
-    private PlayerShoot playerShoot;
-
+    public PlayerShoot playerShoot;
+    public BoxCollider boxCollider;
     private RunHitObject runHitObject;
+    public FrameCounter frameCounter;
 
-    private  int life;
+    private int life;
+    public boolean tripleShot;
 
-   public boolean specialShoot;
 
     public Player() {
+        this.position = new Vector2D();
+        this.frameCounter = new FrameCounter(5);
         this.renderer = new PolygonRenderer(
                 Color.RED,
                 new Vector2D(),
@@ -35,30 +39,29 @@ public class Player extends GameObject implements PhysicBody {
         );
         this.playerMove = new PlayerMove();
         this.playerShoot = new PlayerShoot();
-        this.boxCollider = new BoxCollider(20,16);
+        this.boxCollider = new BoxCollider(30,8);
         this.runHitObject = new RunHitObject(
                 Enemy.class,
-                BulletEnemy.class,
-                SpecialEnemy.class,
-                Shield.class,
-                TripleShoot.class);
-        this.life =1;
-        this.specialShoot = false;
-    }
+                Bullet.class,
+                TripleShot.class,
 
+                Shield.class);
+        this.life =1;
+        this.tripleShot = false;
+
+    }
 
     @Override
     public void run() {
-        super.run();
         this.playerMove.run(this);
-        this.boxCollider.position.set(this.position.x,this.position.y);
-
         this.playerShoot.run(this);
-
-        ((PolygonRenderer)(this.renderer)).angle = this.playerMove.angle;
+        ((PolygonRenderer) this.renderer).angle = this.playerMove.angle;
+        this.boxCollider.position.set(this.position.x - 10, this.position.y - 5);
         this.runHitObject.run(this);
-    }
+        createSmoke();
 
+
+    }
 
     @Override
     public BoxCollider getBoxCollider() {
@@ -67,7 +70,7 @@ public class Player extends GameObject implements PhysicBody {
 
     @Override
     public void getHit(GameObject gameObject) {
-        if(gameObject instanceof Enemy || gameObject instanceof BulletEnemy || gameObject instanceof SpecialEnemy ){
+        if(gameObject instanceof Enemy) {
             if(this.life==1){
                 this.isAlive = false;
             }
@@ -78,8 +81,8 @@ public class Player extends GameObject implements PhysicBody {
         if(gameObject instanceof Shield){
             this.life = 4;
         }
-        if(gameObject instanceof TripleShoot){
-            this.specialShoot = true;
+        if(gameObject instanceof TripleShot){
+            this.tripleShot =true;
         }
     }
 
@@ -87,10 +90,28 @@ public class Player extends GameObject implements PhysicBody {
     public void render(Graphics graphics){
         super.render(graphics);
         if(this.life >1){
-            graphics.setColor(Color.GREEN);
-            graphics.drawOval((int)this.position.x-25, (int)this.position.y-25, 50,50);
+            graphics.setColor(Color.BLUE);
+            for(int i = 40; i<55; i++) {
+                graphics.drawOval((int) this.position.x - i/2, (int) this.position.y - i/2, i, i);
+            }
         }
-
-
     }
+
+    public void createSmoke(){
+        if (this.frameCounter.run()){
+
+            Smoke smoke = GameObjectManager.instance.recycle(Smoke.class);
+            smoke.renderer = new ImageRenderer("resources/images/star.png", 15, 15, Color.cyan);
+
+            smoke.position.set(position);
+
+            Vector2D rotate = this.playerMove.velocity.add(
+                    (new Vector2D(1.5f, 0)).rotate(this.playerMove.angle)
+            );
+
+            smoke.velocity.set(rotate);
+            this.frameCounter.reset();
+        }
+    }
+
 }

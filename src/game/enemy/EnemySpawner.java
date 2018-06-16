@@ -8,21 +8,20 @@ import java.util.Random;
 
 public class EnemySpawner extends GameObject {
 
-    FrameCounter frameCounter ;
-    Random random;
+    private FrameCounter frameCounter;
+    private Random random;
 
-
-    public EnemySpawner(){
-
+    public EnemySpawner() {
         this.random = new Random();
-        this.frameCounter = new FrameCounter(300);
+        this.frameCounter = new FrameCounter(200);
     }
+
     @Override
-    public  void run(){
-        if(this.frameCounter.run()){
-            super.run();
+    public void run() {
+        super.run();
+        if (this.frameCounter.run()) {
             Enemy enemy = GameObjectManager.instance.recycle(Enemy.class);
-            enemy.position.set(this.random.nextInt(1024),this.random.nextInt(600));
+            enemy.position.set(this.random.nextInt(1024), this.random.nextInt(600));
             this.frameCounter.reset();
         }
     }

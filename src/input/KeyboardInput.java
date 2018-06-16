@@ -16,11 +16,11 @@ public class KeyboardInput implements KeyListener {
     public boolean spacePressed;
     public boolean spaceReleased;
 
-    private KeyboardInput(){
+    private KeyboardInput() {
 
     }
 
-    public void reset(){
+    public void reset() {
         this.leftPressed = false;
         this.leftReleased = false;
         this.rightPressed = false;
@@ -31,7 +31,6 @@ public class KeyboardInput implements KeyListener {
         this.spaceReleased = false;
     }
 
-
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -39,41 +38,33 @@ public class KeyboardInput implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_LEFT){
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             this.leftPressed = true;
         }
-
-        if(e.getKeyCode() ==KeyEvent.VK_RIGHT){
-            this.rightPressed =true;
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            this.rightPressed = true;
         }
-
-        if(e.getKeyCode() ==KeyEvent.VK_UP){
-            this.upPressed =true;
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            this.upPressed = true;
         }
-
-        if(e.getKeyCode() ==KeyEvent.VK_SPACE){
-            this.spacePressed =true;
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            this.spacePressed = true;
         }
-
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_LEFT){
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             this.leftReleased = true;
         }
-
-        if(e.getKeyCode() ==KeyEvent.VK_RIGHT){
-            this.rightReleased =true;
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            this.rightReleased = true;
         }
-
-        if(e.getKeyCode() ==KeyEvent.VK_UP){
-            this.upReleased =true;
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            this.upReleased = true;
         }
-
-        if(e.getKeyCode() ==KeyEvent.VK_SPACE){
-            this.spaceReleased =true;
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            this.spaceReleased = true;
         }
-
     }
 }
